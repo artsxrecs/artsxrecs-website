@@ -1,0 +1,3 @@
+# The site is plain HTML/CSS/JS with no build step: Netlify publishes the files as they are.
+[build]
+  publish = "."

@@ -1,0 +1,1308 @@
+/* ArtsxRecs — draft v1
+   One palette, one type system, every page. Tone shifts between pages are deliberately small. */
+
+:root {
+  --charcoal: #2b2926;
+  --ink-soft: #524d47;      /* secondary text, passes AA on stone + cream */
+  --warm-grey: #8a837a;     /* decorative only (rules, placeholders) */
+  --stone-deep: #c3bbae;
+  --stone: #cfc8bc;
+  --cream: #e4ded3;
+  --off-white: #f2eee7;
+  --paper: #f5f2ec;         /* light text on charcoal */
+  --main: #f5f4ef;          /* off-white: "close to white, but not white" (client, 2026-10-22), same family as their Soft Ivory */
+  --main-deep: #e5e4da;     /* Soft Ivory from their palette: the second shade, for bands and tiles */
+  --mint: #91d3c8;          /* Mint from their palette (the client's "Tiffany blue"): accents only */
+  --anthracite: #293133;    /* cool dark grey the client asked for: dark bands, panels, footer */
+  --grey: #a3a8a7;          /* anthracite grey: the glow under the About photo */
+  --grey-soft: #e2e2de;     /* softer still: panels that add a little depth (About) */
+
+  --line: rgba(43, 41, 38, 0.3);
+  --page: var(--main);
+  --hero-bg: var(--main);
+
+  --f-display: 'Archivo', system-ui, sans-serif;
+  --f-text: 'Newsreader', Georgia, serif;
+  --f-mono: 'DM Mono', ui-monospace, monospace;
+  --f-sign: 'Mrs Saint Delafield', cursive;
+
+  --gutter: clamp(16px, 4vw, 56px);
+  --header-h: 76px;
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+body[data-page='home']    { --page: var(--hero-bg); }
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--page);
+  color: var(--charcoal);
+  font-family: var(--f-text);
+  font-size: 19px;
+  line-height: 1.55;
+  font-weight: 380;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Paper grain over every page: the one texture the whole site shares. */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+  opacity: 0.12; /* barely there: stronger grain greys out the off-white */
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .17 0 0 0 0 .16 0 0 0 0 .15 0 0 0 .22 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+a { color: inherit; }
+img { display: block; max-width: 100%; }
+
+:focus-visible {
+  outline: 1px solid var(--charcoal);
+  outline-offset: 4px;
+}
+
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap;
+}
+
+/* ---------- Type roles ---------- */
+
+.label {
+  font-family: var(--f-mono);
+  font-size: 12px;
+  line-height: 1.4;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.display {
+  font-family: var(--f-display);
+  font-stretch: 125%;
+  font-weight: 300;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  line-height: 0.95;
+  margin: 0;
+}
+
+.caps {
+  font-family: var(--f-display);
+  font-stretch: 125%;
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+/* ---------- Header ---------- */
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  height: var(--header-h);
+  padding: 0 var(--gutter);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--page) 86%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid transparent;
+  view-transition-name: site-header;
+}
+
+body[data-page='home'] .site-header {
+  position: fixed;
+  left: 0;
+  right: 0;
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* Home and Events start with a clear header; once content scrolls under it, it frosts over
+   (site.js adds .is-scrolled), so the logo and lists never show through the menu. */
+.site-header { transition: background-color 0.3s ease, backdrop-filter 0.3s ease, border-color 0.3s ease; }
+
+body[data-page='home'] .site-header.is-scrolled,
+body[data-page='events'] .site-header.is-scrolled {
+  background: color-mix(in srgb, var(--main) 86%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom-color: var(--line);
+}
+
+.nav {
+  display: flex;
+  gap: clamp(18px, 3vw, 44px);
+}
+
+.nav a {
+  text-decoration: none;
+  padding: 6px 0;
+  background: linear-gradient(var(--mint), var(--mint)) left bottom / 0 2px no-repeat; /* mint: the current page */
+  transition: background-size 0.35s var(--ease), color 0.3s ease;
+}
+
+.nav a:hover,
+.nav a[aria-current='page'] { background-size: 100% 2px; }
+
+@media (max-width: 560px) {
+  :root { --header-h: 64px; }
+  .nav { gap: 24px; }
+  .nav a.caps { font-size: 11px; letter-spacing: 0.14em; }
+}
+
+/* Five menu items since News: they tighten on phones so they never run edge to edge. */
+@media (max-width: 440px) {
+  .nav { gap: 16px; }
+  .nav a.caps { font-size: 10px; letter-spacing: 0.1em; }
+}
+
+@media (max-width: 350px) {
+  .nav { gap: 11px; }
+  .nav a.caps { font-size: 9.5px; letter-spacing: 0.08em; }
+}
+
+/* ---------- Page scaffolding ---------- */
+
+main { flex: 1; }
+
+.page {
+  padding: clamp(48px, 10vh, 120px) var(--gutter) clamp(72px, 12vh, 140px);
+}
+
+.page-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px 48px;
+  padding-bottom: clamp(28px, 5vh, 48px);
+  margin-bottom: clamp(32px, 6vh, 64px);
+  border-bottom: 1px solid var(--line);
+}
+
+.page-title { font-size: clamp(2.6rem, 8vw, 7rem); }
+
+/* Tabs: Current | Past, Upcoming | Past */
+.tabs { display: flex; gap: 28px; }
+
+.tab {
+  appearance: none;
+  border: 0;
+  background: none;
+  color: var(--ink-soft);
+  cursor: pointer;
+  padding: 6px 0;
+  background-image: linear-gradient(var(--mint), var(--mint)); /* mint: the selected tab, a small constant touch of their colour */
+  background-repeat: no-repeat;
+  background-position: left bottom;
+  background-size: 0 1px;
+  transition: color 0.25s, background-size 0.35s var(--ease);
+}
+
+.tab:hover { color: var(--charcoal); }
+.tab[aria-selected='true'] { color: var(--charcoal); background-size: 100% 2px; }
+.tab sup { font-family: var(--f-mono); font-size: 10px; letter-spacing: 0; margin-left: 4px; }
+
+/* ---------- Buttons & links ---------- */
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: 17px 26px 16px;
+  border: 1px solid var(--charcoal);
+  background: var(--charcoal);
+  color: var(--paper);
+  text-decoration: none;
+  transition: background-color 0.3s var(--ease), color 0.3s var(--ease);
+}
+
+.button .arrow { transition: transform 0.3s var(--ease); }
+/* Mint only on hover: one of the small places their colour shows up. */
+.button:hover { background: var(--mint); border-color: var(--mint); color: var(--anthracite); }
+.button:hover .arrow { transform: translateX(5px); }
+
+/* Mint underline, like the menu: artist links, "All news", the contact links. */
+.text-link {
+  text-decoration: none;
+  background: linear-gradient(var(--mint), var(--mint)) left bottom / 100% 2px no-repeat;
+  padding-bottom: 3px;
+  transition: background-size 0.35s var(--ease);
+}
+.text-link:hover { background-size: 0 2px; background-position: right bottom; }
+
+/* ---------- Home ---------- */
+
+.hero {
+  position: relative;
+  height: 78svh; /* not the full screen: what comes next peeks in, so people scroll */
+  min-height: 600px;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+}
+
+/* Homepage: their anthracite glowing down from the top edge into the off-white (client: grey instead
+   of the mint, then "darker"; Anna: from the anthracite itself). It has faded out by the bottom edge, so
+   there is no seam with the section below. After the 21st.dev "Gradient Backgrounds" example, turned
+   upside down. */
+body[data-page='home'] .hero {
+  background: radial-gradient(125% 125% at 50% 100%, var(--main) 40%, var(--anthracite) 100%);
+}
+
+/* Over the dark top of the homepage the menu is off-white; once the page scrolls under the frosted bar
+   it turns dark again. */
+body[data-page='home'] .site-header:not(.is-scrolled) .nav a { color: var(--off-white); }
+
+/* Their logo (signature + ARTSXRECS), still and sharp. */
+/* Logo and the waveform, stacked in the middle of the hero. */
+.hero-center {
+  --logo-w: min(clamp(260px, 40vw, 640px), 70vh);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transform: translateY(-2vh);
+}
+
+.hero-logo {
+  margin: 0;
+  width: var(--logo-w);
+}
+
+/* A waveform whose played part runs along it, like a track playing non-stop (after the 21st.dev
+   "Waveform Player"). Visual only, no sound; site.js draws the bars. */
+.hero-wave {
+  display: none; /* removed from the homepage at the client's request; only the ?hero=bare draft shows it */
+  width: var(--logo-w);
+  margin-top: clamp(30px, 6vh, 60px);
+}
+
+.wave { position: relative; height: 34px; }
+
+.wave-bars {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.wave-bars i {
+  width: 2px;
+  height: var(--h);
+  border-radius: 1px;
+  background: rgba(41, 49, 51, 0.22);
+  animation: wave-live 1.5s ease-in-out var(--d) infinite alternate;
+}
+
+.wave-played { clip-path: inset(0 100% 0 0); animation: wave-play var(--pass, 8s) linear infinite; }
+.wave-played i { background: var(--anthracite); }
+
+
+@keyframes wave-live { from { transform: scaleY(0.55); } to { transform: scaleY(1); } }
+/* One pass takes 8 s; at the end the played part fades out and it starts again
+   (site.js gives the bars a new shape each pass, like the next track coming on). */
+@keyframes wave-play {
+  0% { clip-path: inset(0 100% 0 0); opacity: 1; }
+  95% { clip-path: inset(0 0 0 0); opacity: 1; }
+  100% { clip-path: inset(0 0 0 0); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wave-bars i, .wave-played { animation: none !important; }
+  .wave-played { clip-path: inset(0 60% 0 0); }
+}
+
+/* Alternative homepage to offer the client (?hero=name | bare, set by site.js): ARTSXRECS and the
+   waveform in the centre. In "name" the signature still writes itself, but huge and faint behind
+   them; in "bare" it is gone (the h1 stays for screen readers). */
+html[data-hero] .hero-center {
+  --logo-w: min(clamp(300px, 56vw, 980px), 110vh);
+  transform: none;
+}
+
+.hero-name {
+  position: relative;
+  z-index: 1;
+  width: var(--logo-w);
+  opacity: 0;
+  animation: name-in 2.4s cubic-bezier(0.25, 0.1, 0.25, 1) 0.1s forwards; /* comes into focus, softly */
+}
+
+@keyframes name-in {
+  from { opacity: 0; filter: blur(10px); }
+  to { opacity: 1; filter: blur(0); }
+}
+
+/* No pen to wait for here: the waveform comes in almost at once, the list soon after. */
+html[data-hero] .hero-wave.reveal { animation-delay: 0.5s; }
+html[data-hero] .hero-copy .reveal { animation-delay: 1.1s; }
+
+.hero-name svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  fill: #000;
+  stroke: #000;
+  stroke-width: 1.1;
+  stroke-linejoin: miter;
+  stroke-miterlimit: 2;
+}
+
+html[data-hero] .hero-wave { position: relative; z-index: 1; }
+html[data-hero='bare'] .hero-wave { display: block; }
+html[data-hero='name'] .hero-wave { display: none; } /* here the name stands alone on the signature */
+
+html[data-hero='name'] .hero-logo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 0;
+  width: min(98vw, 1700px);
+  translate: -50% -36%; /* centres the signature itself (it fills the top 72% of its box) */
+  opacity: 0.09;
+  pointer-events: none;
+}
+
+html[data-hero='name'] .hero-logo .sig-word { display: none; }
+
+html[data-hero='bare'] .hero-logo {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+@media (max-width: 720px) {
+  html[data-hero] .hero-center { --logo-w: 84vw; }
+  html[data-hero='name'] .hero-logo { width: 118vw; }
+}
+
+/* In the version without the big signature (?hero=bare): their signature, small and still, with the
+   tagline, in the bottom-right corner, opposite the list. */
+.hero-mark { display: none; }
+
+html[data-hero='bare'] .hero-mark {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  position: absolute;
+  right: var(--gutter);
+  bottom: clamp(28px, 7vh, 72px);
+}
+
+html[data-hero='bare'] .hero-mark img { width: clamp(110px, 11vw, 190px); height: auto; }
+html[data-hero='bare'] .hero-mark .label { margin: 0; }
+html[data-hero='bare'] .hero-mark.reveal { animation-delay: 1.1s; }
+
+@media (max-width: 720px) {
+  html[data-hero='bare'] .hero-mark img { width: 96px; }
+  html[data-hero='bare'] .hero-mark .label { max-width: 9em; text-align: right; } /* one word a line, clear of the list */
+}
+
+.hero-logo img { width: 100%; height: auto; }
+
+/* Signing (assets/js/signing.js): the signature writes itself on a canvas, letter by letter,
+   while ARTSXRECS fades in underneath. At the end their untouched logo file fades over it.
+   Without JS or with reduced motion, the finished logo shows straight away. */
+.signing { position: relative; display: block; width: 100%; }
+
+.sig-final,
+.sig-canvas {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: var(--mark-h);
+}
+
+.sig-canvas { display: none; }
+.sig-word { position: absolute; height: auto; }
+
+.signing.is-signing .sig-canvas { display: block; }
+.signing.is-signing .sig-final { opacity: 0; transition: opacity 0.25s ease; }
+.signing.is-signing .sig-word { opacity: 0; animation: fade-in 1.4s ease 0.15s forwards; }
+.signing.is-signed .sig-final { opacity: 1; }
+
+@keyframes fade-in { to { opacity: 1; } }
+
+/* ARTSXRECS in the weight of their bold logo (black_bold_on_white.png): the designer's letters,
+   thickened by an outline (SVG units; matches the bold file's stem-to-height ratio of ~0.17). */
+.sig-word { display: block; fill: #000; stroke: #000; stroke-width: 1.1; stroke-linejoin: miter; stroke-miterlimit: 2; overflow: visible; }
+
+/* Version 2 (index.html?intro=fade): the signature fades in very slowly out of a soft blur, and the
+   letters of ARTSXRECS are pulled in from both screen edges and snap together (X stays put). */
+.signing[data-intro='fade'] .sig-canvas { display: none; }
+
+.signing[data-intro='fade'] .sig-final {
+  opacity: 0;
+  filter: blur(10px);
+  animation: sig-fade 4.5s cubic-bezier(0.33, 0, 0.2, 1) 0.3s forwards;
+}
+
+/* ARTSXRECS: hidden until signing.js pulls the letters together from the screen edges. */
+.signing[data-intro='fade'] .wm { opacity: 0; }
+
+@keyframes sig-fade { to { opacity: 1; filter: blur(0); } }
+
+@media (max-width: 720px) {
+  .hero-center { --logo-w: 72vw; }
+  .hero-wave { width: 80vw; }
+}
+
+/* Logo effects (frosted / fluted / relief) are parked: hero.js is no longer loaded.
+   The styles below stay so the effects can come back without rework. */
+
+.hero > canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  opacity: 0;
+  transition: opacity 0.3s var(--ease);
+}
+
+/* No-WebGL fallback: the same idea in plain CSS. */
+.hero-fallback {
+  position: absolute;
+  inset: 0;
+  display: none;
+  place-items: center;
+  font-family: var(--f-sign);
+  font-size: min(34vw, 60vh);
+  line-height: 1;
+  color: var(--charcoal);
+  opacity: 0.5;
+  filter: blur(18px);
+  white-space: nowrap;
+}
+.no-webgl .hero-fallback { display: grid; }
+
+/* Bottom row: what they do on the left, the way into the roster on the right. */
+.hero-copy {
+  position: absolute;
+  left: var(--gutter);
+  right: var(--gutter);
+  bottom: clamp(28px, 7vh, 72px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+/* Half-transparent charcoal; solid on hover. 62% keeps the white text readable (AA). */
+.hero .button {
+  background: rgba(43, 41, 38, 0.62);
+  border-color: transparent;
+  color: var(--paper);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+.hero .button:hover { background: var(--charcoal); color: var(--paper); }
+
+@media (max-width: 560px) {
+  .hero-copy { flex-direction: column; align-items: flex-start; }
+  .hero-copy .button { align-self: flex-end; }
+}
+
+.hero-name {
+  font-size: clamp(2.2rem, 5.2vw, 4.6rem);
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  margin-bottom: 18px;
+}
+
+.hero-tagline {
+  font-style: italic;
+  font-size: clamp(1.1rem, 1.6vw, 1.35rem);
+  margin: 0 0 30px;
+}
+
+.hero-areas {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.hero-areas li + li { margin-top: 4px; }
+
+/* Homepage concept switcher (draft only) */
+.concepts {
+  position: absolute;
+  top: calc(var(--header-h) + 8px);
+  right: var(--gutter);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 6px 6px 14px;
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--off-white) 55%, transparent);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 5;
+}
+
+.concepts .label { margin-right: 6px; }
+
+.concepts button {
+  appearance: none;
+  border: 1px solid transparent;
+  background: none;
+  color: var(--ink-soft);
+  font-family: var(--f-mono);
+  font-size: 12px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.concepts button:hover { color: var(--charcoal); }
+.concepts button[aria-pressed='true'] { border-color: var(--charcoal); color: var(--charcoal); }
+
+.concept-hint {
+  position: absolute;
+  top: calc(var(--header-h) + 62px);
+  right: var(--gutter);
+  max-width: 34ch;
+  margin: 0;
+  text-align: right;
+  text-transform: none;
+  letter-spacing: 0.02em;
+  z-index: 5;
+}
+
+@media (max-width: 720px) {
+  .concepts { left: var(--gutter); right: var(--gutter); justify-content: space-between; }
+  .concepts .label { display: none; }
+  .concept-hint { left: var(--gutter); text-align: left; }
+}
+
+/* ---------- Home: the concert photo, Recent and Past News, the band of artists ---------- */
+
+.home-section { padding: clamp(56px, 9vh, 104px) var(--gutter); }
+.home-section + .home-section { padding-top: 0; } /* Recent and Past News sit together */
+
+.section-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px 48px;
+  margin-bottom: clamp(36px, 6vh, 64px);
+}
+
+/* Small section titles (client: "make the lettering smaller"). */
+.section-title { font-size: clamp(1.5rem, 2.6vw, 2.4rem); }
+.section-head .text-link { font-size: 13px; }
+
+/* On very wide screens the content stops growing (the photos would turn into wide strips and lose
+   the heads); it sits centred instead. */
+.home-section > .section-head,
+.news-cards { width: min(100%, 1320px); margin-inline: auto; }
+.roster-band .section-head { width: min(100%, calc(1320px + 2 * var(--gutter))); margin-inline: auto; }
+
+/* Recent News and Past News: compact cards, three in a row. A small photo with the mint frame they
+   liked, a short label, the name, their text. On phones each card is a row: photo left, text right. */
+.news-cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(28px, 3vw, 48px);
+}
+
+.news-card { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+
+.news-card-media {
+  position: relative; /* holds the initials while an artist's photo is still to come (Elmiene) */
+  display: block;
+  width: calc(100% - clamp(6px, 0.6vw, 10px));
+  aspect-ratio: 4 / 3;
+  margin-bottom: 14px;
+  overflow: hidden;
+  background: var(--main-deep);
+  box-shadow: clamp(6px, 0.6vw, 10px) clamp(6px, 0.6vw, 10px) 0 var(--mint);
+}
+
+.news-card-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 20%;
+  transition: transform 0.8s var(--ease);
+}
+
+.news-card:hover .news-card-media img { transform: scale(1.04); }
+.news-card-media .tile-initials { font-size: clamp(4rem, 8vw, 7rem); }
+
+.news-card-meta { margin: 0; }
+
+.news-card-title,
+.news-title {
+  margin: 0;
+  font-family: var(--f-display);
+  font-stretch: 112%;
+  font-weight: 400;
+  font-size: clamp(1.15rem, 1.5vw, 1.45rem);
+  letter-spacing: 0.06em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.news-card-text { margin: 0; font-size: clamp(16px, 1.05vw, 18px); line-height: 1.45; }
+
+/* A small mint tag, e.g. Oddisee: ArtsxRecs is his management. */
+.news-tag {
+  margin: 0;
+  padding: 4px 8px 3px;
+  background: color-mix(in srgb, var(--mint) 55%, transparent);
+  color: var(--anthracite);
+}
+
+.news-card-link,
+.news-link {
+  margin-top: 4px;
+  padding-bottom: 4px;
+  color: var(--charcoal);
+  text-decoration: none;
+  background: linear-gradient(var(--mint), var(--mint)) left bottom / 100% 2px no-repeat;
+}
+
+.news-card-link .arrow,
+.news-link .arrow { display: inline-block; margin-left: 6px; transition: transform 0.3s var(--ease); }
+.news-card-link:hover .arrow,
+.news-link:hover .arrow { transform: translateX(5px); }
+
+@media (max-width: 720px) {
+  .news-cards { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+  .news-card { display: grid; grid-template-columns: 38% minmax(0, 1fr); column-gap: 18px; row-gap: 6px; align-content: start; }
+  .news-card > * { grid-column: 2; justify-self: start; }
+  .news-card-media { grid-column: 1; grid-row: 1 / span 6; width: 100%; aspect-ratio: 4 / 5; margin: 0; box-shadow: 5px 5px 0 var(--mint); }
+}
+
+/* The band of artists: an anthracite section with the curved row of portraits (site.js). */
+.roster-band {
+  background: var(--anthracite);
+  color: var(--paper);
+  padding: clamp(80px, 13vh, 150px) 0 clamp(48px, 8vh, 96px);
+}
+
+.roster-band .section-head { padding: 0 var(--gutter); margin-bottom: 0; }
+
+/* The button comes after the faces: centred under the curved row. */
+.band-foot { display: flex; justify-content: center; padding: clamp(8px, 2vh, 24px) var(--gutter) 0; }
+
+.button-light { background: var(--paper); border-color: var(--paper); color: var(--anthracite); }
+.button-light:hover { background: var(--mint); border-color: var(--mint); color: var(--anthracite); }
+
+.band {
+  overflow: hidden;
+  padding-block: clamp(28px, 5vh, 56px);
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+/* A straight row of portraits drifting slowly to the left (client: straight rectangular frames, not
+   the arch). The row holds the portraits twice, so when the first set has passed, the second is in
+   its place and the loop never shows a seam. */
+.row-track {
+  display: flex;
+  width: max-content;
+  animation: row-drift calc(var(--n, 20) * 3s) linear infinite;
+}
+
+.band.is-paused .row-track { animation-play-state: paused; }
+
+.row-tile {
+  flex: none;
+  width: clamp(140px, 15vw, 230px);
+  aspect-ratio: 4 / 5;
+  margin-right: clamp(12px, 1.4vw, 20px);
+  overflow: hidden;
+  background: #353e40;
+}
+
+.row-tile img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 20%; }
+
+@keyframes row-drift { to { transform: translateX(-50%); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .row-track { animation: none !important; }
+}
+
+/* Rendered by JS further down the page: rise in gently once scrolled into view. */
+.on-scroll {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.9s var(--ease), transform 0.9s var(--ease);
+}
+
+.on-scroll.is-in { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .on-scroll { transform: none; }
+}
+
+/* ---------- Artists grid ---------- */
+
+/* Brief: "a clean grid of artist photographs", consistent sizes, names clear, subtle hover.
+   Four across on desktop, three on tablets, two on phones. */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(28px, 4vw, 52px) clamp(14px, 2vw, 28px);
+}
+
+@media (max-width: 1100px) {
+  .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: 720px) {
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+.tile { text-decoration: none; display: block; }
+
+.tile-media {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: var(--tone, var(--stone-deep));
+  transition: background-color 0.4s var(--ease), box-shadow 0.35s var(--ease);
+}
+
+/* On hover the photo gets the mint frame, like the profile photos and the news cards. */
+.tile:hover .tile-media,
+.tile:focus-visible .tile-media { box-shadow: clamp(6px, 0.6vw, 10px) clamp(6px, 0.6vw, 10px) 0 var(--mint); }
+
+/* Photos in colour (client: the site felt "too black and white"). */
+.tile-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 20%; /* a crop loses the bottom of the photo, never the heads */
+  transition: transform 0.8s var(--ease);
+}
+
+.tile:hover .tile-media img { transform: scale(1.04); }
+
+/* Placeholder until the official photo arrives: the artist's initials, cropped like a sleeve. */
+.tile-initials {
+  position: absolute;
+  left: -0.04em;
+  bottom: -0.2em;
+  font-family: var(--f-display);
+  font-stretch: 125%;
+  font-weight: 200;
+  font-size: clamp(5rem, 11vw, 9rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--charcoal);
+  opacity: 0.16;
+  transition: transform 0.6s var(--ease), opacity 0.4s;
+}
+
+.tile:hover .tile-initials { transform: translateY(-8px); opacity: 0.26; }
+
+.tile-name {
+  margin-top: 14px;
+  font-family: var(--f-display);
+  font-stretch: 112%;
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  line-height: 1.3;
+}
+
+/* Hover: the name gets a mint underline (their brand colour as a small detail). */
+.tile-name span {
+  background: linear-gradient(var(--mint), var(--mint)) left bottom / 0 2px no-repeat;
+  transition: background-size 0.35s var(--ease);
+  padding-bottom: 3px;
+}
+.tile:hover .tile-name span,
+.tile:focus-visible .tile-name span { background-size: 100% 2px; }
+
+.tile .label { margin-top: 4px; display: block; }
+
+/* ---------- Artist profile ---------- */
+
+.profile {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  column-gap: clamp(32px, 6vw, 96px);
+  row-gap: clamp(24px, 4vh, 40px);
+  align-items: start;
+}
+
+.profile-media {
+  position: sticky;
+  top: calc(var(--header-h) + 24px);
+}
+
+.profile-media .tile-media { aspect-ratio: 4 / 5; }
+/* A small solid mint frame behind the photo, like the shadows behind the project cards on Home. */
+.profile-media .tile-media { box-shadow: clamp(10px, 1vw, 18px) clamp(10px, 1vw, 18px) 0 var(--mint); }
+/* Artist profiles: their signature, blurred like on Events, in the empty space under Previous / Next.
+   Part of the page (not fixed), so it only ever fills space and never sits behind the text. */
+.profile-sign {
+  width: min(100%, 1300px); /* the full width of the text column, centred in it */
+  margin: clamp(40px, 7vh, 90px) auto 0;
+  aspect-ratio: 435.79 / 152.13;
+  background: url('../img/logo-mark.svg') center / contain no-repeat;
+  filter: blur(6px);
+  opacity: 0.22;
+}
+.profile-media .tile-initials { font-size: clamp(8rem, 18vw, 16rem); }
+
+.back { grid-column: 1 / -1; justify-self: start; text-decoration: none; }
+.back:hover { color: var(--charcoal); }
+
+.profile-name { font-size: clamp(2.4rem, 5.6vw, 5.4rem); margin: 14px 0 0; }
+.profile-note { margin-top: 14px; }
+
+.profile-bio {
+  margin-top: clamp(28px, 5vh, 48px);
+  max-width: 34em;
+  font-size: clamp(1.1rem, 1.35vw, 1.3rem);
+  line-height: 1.6;
+}
+
+.profile-bio p { margin: 0; }
+.profile-bio .pending { color: var(--ink-soft); font-style: italic; }
+
+.profile-section {
+  margin-top: clamp(36px, 6vh, 56px);
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+
+.links {
+  list-style: none;
+  margin: 14px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 32px;
+}
+
+.profile-pager {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  margin-top: clamp(64px, 12vh, 120px);
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+
+.profile-pager a { text-decoration: none; }
+.profile-pager a:hover .caps { text-decoration: underline; text-underline-offset: 5px; }
+.profile-pager .caps { display: block; margin-top: 6px; }
+.profile-pager .next { text-align: right; margin-left: auto; }
+
+@media (max-width: 820px) {
+  .profile { grid-template-columns: 1fr; }
+  .profile-media { position: static; max-width: 480px; }
+}
+
+/* ---------- Events ---------- */
+
+/* Their signature behind the page, as if seen through glass or thin white paper.
+   Fixed, so it stays put while the list scrolls over it. */
+.watermark {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: url('../img/logo-mark.svg') center center / min(90vw, 1500px) auto no-repeat;
+  filter: blur(7px);
+  opacity: 0.24;
+}
+
+@media (max-width: 720px) {
+  .watermark { background-size: 150vw auto; background-position: center center; }
+}
+
+/* On Events the menu bar is see-through, so it doesn't cut a flat strip across the glass. */
+body[data-page='events'] .site-header {
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* A sheet of clear glass over the signature (the signature itself is unchanged):
+   faint cool tint + soft diagonal reflections. Sits under the page content. */
+.glass {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    linear-gradient(105deg,
+      rgba(255, 255, 255, 0) 18%, rgba(255, 255, 255, 0.75) 27%, rgba(255, 255, 255, 0) 33%,
+      rgba(255, 255, 255, 0.35) 38%, rgba(255, 255, 255, 0) 41%,
+      rgba(255, 255, 255, 0) 70%, rgba(255, 255, 255, 0.5) 78%, rgba(255, 255, 255, 0) 86%),
+    linear-gradient(180deg, rgba(223, 227, 228, 0.22), rgba(207, 212, 214, 0.12));
+}
+
+.events { list-style: none; margin: 0; padding: 0; }
+
+.event {
+  display: grid;
+  grid-template-columns: 9.5rem minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr) 8rem;
+  gap: 24px;
+  align-items: baseline;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.events .event:first-child { border-top: 1px solid var(--line); }
+#events .events .event:first-child,
+#events .events-empty { border-top: 0; padding-top: 0; }
+
+.event-date { font-family: var(--f-mono); font-size: 14px; letter-spacing: 0.06em; }
+.event-artist { font-size: 15px; letter-spacing: 0.14em; text-decoration: none; }
+.event-artist:hover { text-decoration: underline; text-underline-offset: 5px; }
+.event-place, .event-venue { font-size: 17px; }
+.event-venue.pending, .event-tickets.pending { color: var(--ink-soft); }
+.event-tickets { justify-self: end; text-decoration: none; white-space: nowrap; }
+a.event-tickets:hover .arrow { transform: translateX(4px); }
+.event-tickets .arrow { display: inline-block; transition: transform 0.3s var(--ease); }
+
+.events-empty { padding: 32px 0; border-top: 1px solid var(--line); color: var(--ink-soft); font-style: italic; }
+
+@media (max-width: 860px) {
+  .event {
+    grid-template-columns: 1fr auto;
+    gap: 6px 16px;
+    padding: 20px 0;
+  }
+  .event-date { grid-column: 1; grid-row: 1; }
+  .event-tickets { grid-column: 2; grid-row: 1; }
+  .event-artist { grid-column: 1 / -1; font-size: 16px; margin-top: 4px; }
+  .event-place, .event-venue { grid-column: 1 / -1; font-size: 16px; }
+}
+
+/* Upcoming events on a profile reuse the event row in a compact form */
+.profile .event { grid-template-columns: 8.5rem minmax(0, 1fr) auto; row-gap: 2px; }
+.profile .event .event-artist { display: none; }
+.profile .event .event-place { grid-column: 2; grid-row: 1; }
+.profile .event .event-venue { grid-column: 2; grid-row: 2; }
+.profile .event .event-tickets { grid-column: 3; grid-row: 1; }
+@media (max-width: 860px) {
+  .profile .event { grid-template-columns: 1fr auto; }
+  .profile .event .event-place { grid-column: 1 / -1; grid-row: 2; }
+  .profile .event .event-venue { grid-column: 1 / -1; grid-row: 3; }
+  .profile .event .event-tickets { grid-column: 2; grid-row: 1; }
+}
+
+/* ---------- About ---------- */
+
+/* The concert photo as a wide panoramic band at the top (client, like Mindfeederz): edge to edge, cropped
+   top and bottom, toned down with anthracite so the title and the sentence stand out (not blurred).
+   A tiny copy of the photo (inline in about.html) shows at once while the real one loads. */
+.about-banner {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: clamp(300px, 50vh, 560px);
+  margin: calc(clamp(48px, 10vh, 120px) * -1) calc(var(--gutter) * -1) 0;
+  padding: 0 var(--gutter);
+  overflow: hidden;
+  background: #2a1c10 center 55% / cover no-repeat;
+  color: var(--off-white);
+  text-align: center;
+}
+.about-banner-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 55%; }
+.about-banner::after { content: ''; position: absolute; inset: 0; background: color-mix(in srgb, var(--anthracite) 52%, transparent); }
+.about-banner-text { position: relative; z-index: 1; }
+
+/* Their name in their own lettering, as on the homepage (the ARTSXRECS of the logo, same bold weight),
+   off-white on the photo (client: the company name instead of "About"). */
+.about-banner-title { margin: 0; }
+.banner-word {
+  display: block;
+  width: min(72vw, 860px);
+  height: auto;
+  margin: 0 auto;
+  overflow: visible;
+  fill: var(--off-white);
+  stroke: var(--off-white);
+  stroke-width: 1.1;
+  stroke-linejoin: miter;
+  stroke-miterlimit: 2;
+}
+.about-banner-title + .about-banner-line { margin-top: clamp(22px, 3.6vh, 40px); }
+.about-banner-line {
+  max-width: 22em;
+  margin: 0.7em auto 0;
+  font-size: clamp(1.15rem, 2.2vw, 1.9rem);
+  font-weight: 350;
+  line-height: 1.3;
+}
+/* All the About text in one block (Anna: "all of this text should be together"): the opening sentence
+   big and centred, a short mint line, then one paragraph made from the client's first and third
+   paragraphs (Anna picked this over three short points). It fades in as it scrolls into view. The background is the homepage's grey glow, edge to
+   edge right under the photo and fading to off-white by the bottom (Anna: a dark panel under the photo
+   felt heavy). */
+.about-body {
+  margin: 0 calc(var(--gutter) * -1);
+  background: radial-gradient(125% 125% at 50% 100%, var(--main) 40%, var(--grey) 100%);
+}
+
+.about-text {
+  padding: clamp(48px, 9vh, 104px) clamp(24px, 5vw, 72px);
+  text-align: center;
+}
+.about-text.on-scroll { transform: none; transition: opacity 1.2s var(--ease); }
+
+.about-intro {
+  max-width: 24em;
+  margin: 0 auto;
+  font-size: clamp(1.45rem, 2.7vw, 2.3rem);
+  font-weight: 350;
+  line-height: 1.28;
+}
+
+/* the short mint line, like the one under "Get in touch" */
+.about-intro::after {
+  content: '';
+  display: block;
+  width: 56px;
+  height: 3px;
+  margin: clamp(24px, 4vh, 36px) auto 0;
+  background: var(--mint);
+}
+
+.about-one {
+  max-width: 36em;
+  margin: clamp(24px, 4vh, 36px) auto 0;
+  color: var(--ink-soft);
+}
+
+.areas {
+  list-style: none;
+  margin: clamp(56px, 10vh, 112px) 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: clamp(24px, 5vw, 80px);
+}
+
+.areas-head { margin-top: clamp(56px, 10vh, 112px); }
+.about-body + .areas-head { margin-top: clamp(16px, 3vh, 40px); } /* the glow's own fade already makes the gap */
+
+/* mint details (Anna): a short mint dash before "Our areas of work" and "Partners", a small mint square
+   before each area */
+.areas-head::before { content: ''; display: inline-block; width: 24px; height: 3px; margin-right: 12px; vertical-align: 0.25em; background: var(--mint); }
+.areas li::before { content: ''; display: inline-block; width: 7px; height: 7px; margin-right: 14px; vertical-align: 0.12em; background: var(--mint); }
+.areas-head + .areas { margin-top: 20px; }
+
+.areas li {
+  padding: 18px 0 18px 21px;
+  text-indent: -21px; /* a wrapped name lines up under the first line, not under the mint square */
+  border-bottom: 1px solid var(--line);
+  font-family: var(--f-display);
+  font-stretch: 112%;
+  font-size: 15px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.areas li:nth-child(-n + 2) { border-top: 1px solid var(--line); }
+
+/* Partners: at the bottom of About (client: no page of their own). The logo sits above the name;
+   names stand alone until a partner's logo arrives (assets/img/partners/). Hover: the mint frame. */
+.areas-head + .partners { margin-top: 20px; }
+/* Four to a row, and a shorter last row sits in the middle. */
+.partners {
+  --gap: clamp(12px, 2vw, 28px);
+  --per-row: 4;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--gap);
+}
+.partners li { flex: 0 0 calc((100% - (var(--per-row) - 1) * var(--gap)) / var(--per-row)); }
+@media (max-width: 1000px) { .partners { --per-row: 3; } }
+
+.partner {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  gap: 14px;
+  height: 100%;
+  min-height: clamp(110px, 12vw, 170px);
+  padding: 20px;
+  background: var(--grey-soft);
+  color: inherit;
+  text-align: center;
+  text-decoration: none;
+  font-family: var(--f-display);
+  font-stretch: 112%;
+  font-size: 15px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: box-shadow 0.3s ease;
+}
+
+.partner img { display: block; height: clamp(40px, 4vw, 56px); max-width: 70%; object-fit: contain; }
+.partner:hover,
+a.partner:focus-visible { box-shadow: clamp(6px, 0.6vw, 10px) clamp(6px, 0.6vw, 10px) 0 var(--mint); }
+
+/* Full-bleed band before the footer, everything centred so the title sits with the email and Instagram
+   (Anna: it was too far from them). Mint: a short line under the title and the Email button. */
+.contact {
+  margin: clamp(72px, 14vh, 140px) calc(var(--gutter) * -1) calc(clamp(72px, 12vh, 140px) * -1);
+  padding: clamp(56px, 10vh, 104px) var(--gutter);
+  background: var(--main-deep);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: clamp(28px, 4.5vh, 40px);
+}
+
+.contact-title { font-size: clamp(2rem, 5vw, 4rem); margin-top: 12px; }
+.contact-title::after {
+  content: '';
+  display: block;
+  width: 64px;
+  height: 3px;
+  margin: clamp(18px, 3vh, 26px) auto 0;
+  background: var(--mint);
+}
+.contact-links { position: relative; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 20px 32px; }
+/* "axr@artsxrecs.com – copied", under the links for a few seconds after "Email us"; it takes no room */
+.contact-note { position: absolute; left: 0; right: 0; top: calc(100% + 16px); margin: 0; text-transform: none; letter-spacing: 0.02em; }
+.contact .button { background: var(--mint); border-color: var(--mint); color: var(--anthracite); }
+.contact .button:hover { background: var(--anthracite); border-color: var(--anthracite); color: var(--paper); }
+
+@media (max-width: 720px) {
+  .areas { grid-template-columns: 1fr; }
+  .areas li:nth-child(2) { border-top: 0; }
+  .partners { --per-row: 2; }
+  .partner { min-height: 96px; padding: 16px 12px; font-size: 13px; }
+}
+
+/* ---------- Footer ---------- */
+
+.site-footer {
+  background: var(--anthracite);
+  color: var(--off-white);
+  padding: clamp(36px, 6vh, 56px) var(--gutter);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px 48px;
+}
+
+/* Their signature, recoloured by CSS so it can sit light on the dark footer. */
+.footer-mark {
+  display: block;
+  width: 124px;
+  aspect-ratio: 435.79 / 152.13;
+  background-color: var(--off-white);
+  -webkit-mask: url('../img/logo-mark.svg') center / contain no-repeat;
+  mask: url('../img/logo-mark.svg') center / contain no-repeat;
+}
+.site-footer .label { color: #b9b1a6; }
+.footer-tag { margin: 6px 0 0; }
+.footer-copy { margin: 0; }
+.footer-links { display: flex; gap: 28px; }
+.footer-links a { text-decoration: none; }
+.footer-links a:hover { text-decoration: underline; text-underline-offset: 5px; }
+
+/* On touch screens the small text links get a bigger invisible tap area (they are 17-23px tall). */
+@media (pointer: coarse) {
+  .footer-links a, .text-link, .back, .news-link, .news-card-link { position: relative; }
+  .footer-links a::after, .text-link::after, .back::after, .news-link::after, .news-card-link::after {
+    content: '';
+    position: absolute;
+    inset: -12px -6px;
+  }
+}
+
+/* ---------- Motion ---------- */
+
+@view-transition { navigation: auto; }
+
+::view-transition-old(root),
+::view-transition-new(root) { animation-duration: 0.45s; animation-timing-function: var(--ease); }
+
+.reveal { animation: rise 0.9s var(--ease) both; animation-delay: calc(var(--i, 0) * 70ms); }
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+  }
+  @view-transition { navigation: none; }
+}
+
+/* On Home the footer follows the dark band of artists: a hairline keeps them apart. */
+body[data-page='home'] .site-footer { border-top: 1px solid rgba(245, 244, 239, 0.12); }
+
+/* ---------- News page: a chronological feed, newest first (news.js) ----------
+   Minimal rows: a small photo, then the date, the headline, the text and a link. */
+.news-feed { list-style: none; margin: 0; padding: 0; max-width: 1100px; }
+
+.news-item {
+  display: grid;
+  grid-template-columns: clamp(130px, 20vw, 260px) minmax(0, 1fr);
+  gap: clamp(20px, 3vw, 48px);
+  padding: clamp(24px, 4vh, 40px) 0;
+  border-top: 1px solid var(--line);
+}
+
+.news-item:first-child { border-top: 0; } /* the page head already draws that line */
+.news-item:last-child { border-bottom: 1px solid var(--line); }
+
+.news-media { position: relative; aspect-ratio: 4 / 3; overflow: hidden; background: var(--tone, var(--main-deep)); }
+.news-media img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 20%; }
+.news-media .tile-initials { font-size: clamp(3rem, 6vw, 5.5rem); }
+.news-media img.story-logo { object-fit: contain; padding: 22%; } /* a partner's logo: whole, on the plain tile */
+
+.news-body { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+.news-date { margin: 0; }
+.news-text { margin: 0 0 6px; max-width: 38em; }
+
+@media (max-width: 600px) {
+  .news-item { grid-template-columns: 36% minmax(0, 1fr); gap: 16px; }
+}
