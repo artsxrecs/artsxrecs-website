@@ -78,9 +78,10 @@
     { from: stem, pts: stem.pts.slice(0, 7) },                            // up the R's stem to where its head starts
     // The loop and the tail start at the same spot, so they reveal separately (otherwise the tail's start
     // pops up while the loop begins), and the loop gets a finer tip so its returning line doesn't show early.
-    // Round the R's loop: a fine tip where it starts (its returning line ends right next to it), widening
-    // on the way up so the thick curl at the top is drawn fully.
-    { from: loop, pts: loop.pts.slice(0, 17), shapes: [3], width: 13, ramp: [7, 13, 16, 34] },
+    // Round the R's loop: it leaves from inside the stem, so its first bit joins the stem with no gap. A
+    // fine tip there (its returning line ends right next to it), widening on the way up so the thick curl
+    // at the top is drawn fully.
+    { from: loop, pts: [[251.8, 67.4], ...loop.pts.slice(0, 17)], shapes: [3], width: 13, ramp: [[0, 5.2], [8, 7], [24, 7], [42, 13]] },
     // Out along the long tail. It starts as fine as the line coming into it and swells to its full
     // weight over its first stretch (grow: [start width, units]), so the turn into it is one movement
     // instead of a heavy blob appearing at once.
@@ -147,9 +148,14 @@
     for (let i = 1; i < pts.length; i++) cum.push(cum[i - 1] + Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]));
     const leg = { shapes: l.shapes || l.from.shapes, width: l.width || l.from.width, pts, cum, len: cum[cum.length - 1], start, rate: l.rate || 0, grow: l.grow, baked: false };
     if (l.ramp) {
-      // [width at start, full width, ramp from, ramp to] — distances along the leg
-      const [w0, w1, a, b] = l.ramp;
-      leg.widthAt = (s) => (s <= a ? w0 : s >= b ? w1 : w0 + ((w1 - w0) * (s - a)) / (b - a));
+      // [distance along the leg, width] pairs, straight lines between them
+      leg.widthAt = (s) => {
+        const j = l.ramp.findIndex(([a]) => s < a);
+        if (j < 0) return l.ramp[l.ramp.length - 1][1];
+        if (j === 0) return l.ramp[0][1];
+        const [a, w0] = l.ramp[j - 1], [b, w1] = l.ramp[j];
+        return w0 + ((w1 - w0) * (s - a)) / (b - a);
+      };
     }
     return leg;
   }

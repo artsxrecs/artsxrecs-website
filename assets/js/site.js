@@ -245,7 +245,11 @@
   // can move the crop for its frame (Toshiki: less ceiling).
   function storyPhoto(story, a) {
     if (story.logo && !story.photo) return `<img class="story-logo" src="assets/img/partners/${esc(story.logo)}" alt="" loading="lazy" decoding="async">`;
-    if (story.photo) return `<img src="assets/img/news/${esc(story.photo)}" alt="" loading="lazy" decoding="async">`;
+    if (story.photo) {
+      return `<img src="assets/img/news/${esc(story.photo)}" alt=""${
+        story.focus ? ` style="object-position:${esc(story.focus)}"` : ''
+      } loading="lazy" decoding="async">`;
+    }
     if (a && a.photo) {
       const focus = story.focus || a.focus;
       return `<img src="assets/img/artists/small/${esc(a.photo)}" alt=""${

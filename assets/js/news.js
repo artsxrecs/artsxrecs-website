@@ -41,13 +41,13 @@ window.NEWS = [
 
 window.HOME_NEWS = {
   recent: [
-    { artist: 'elmiene', meta: 'Doha Film Festival', text: 'Confirmed to perform at the Doha Film Festival.', photo: '' },
-    { artist: 'toshiki-soejima', meta: 'European tour', text: 'Japanese guitarist Toshiki Soejima kicks off his first-ever European tour this month, presented by ArtsxRecs.', photo: '', focus: '50% 50%' },
-    { artist: 'oddisee', meta: 'Washington, D.C. · Adams Morgan PorchFest', text: 'Confirmed as a headliner in Washington, D.C., with another upcoming appearance at Adams Morgan PorchFest.', tag: 'Management: ArtsxRecs', photo: '', focus: '50% 30%' },
+    { artist: 'elmiene', meta: 'Doha Film Festival', text: 'Confirmed to perform at the Doha Film Festival.', photo: 'elmiene.jpg', focus: '35% 50%' },
+    { artist: 'toshiki-soejima', meta: 'European tour', text: 'Japanese guitarist Toshiki Soejima kicks off his first-ever European tour this month, presented by ArtsxRecs.', photo: 'toshiki-soejima.jpg', focus: '35% 50%' },
+    { artist: 'oddisee', meta: 'Washington, D.C. · Adams Morgan PorchFest', text: 'Confirmed as a headliner in Washington, D.C., with another upcoming appearance at Adams Morgan PorchFest.', tag: 'Management: ArtsxRecs', photo: 'oddisee.jpg', focus: '80% 50%' },
   ],
   past: [
-    { artist: 'the-roots', meta: 'Warsaw · July 2026', text: 'Legendary hip-hop band The Roots leave hip-hop and jazz enthusiasts stunned with their first-ever headline performance in Poland, taking the stage in Warsaw on July 7, 2026.', photo: '' },
-    { artist: 'the-alchemist', meta: 'Oslo · August 2026', text: 'Hip-hop icon and legendary producer The Alchemist delivers an exclusive performance in Oslo, Norway, on August 28, 2026, at Dattera til Hagen.', photo: '' },
-    { artist: 'freddie-gibbs', meta: 'European tours', text: 'Grammy-nominated rapper Freddie Gibbs brought his signature sound to audiences across Europe through a series of live performances and tours.', photo: '' },
+    { artist: 'the-roots', meta: 'Warsaw · July 2026', text: 'Legendary hip-hop band The Roots leave hip-hop and jazz enthusiasts stunned with their first-ever headline performance in Poland, taking the stage in Warsaw on July 7, 2026.', photo: 'the-roots.jpg', focus: '35% 50%' },
+    { artist: 'the-alchemist', meta: 'Oslo · August 2026', text: 'Hip-hop icon and legendary producer The Alchemist delivers an exclusive performance in Oslo, Norway, on August 28, 2026, at Dattera til Hagen.', photo: 'the-alchemist.jpg', focus: '80% 50%' },
+    { artist: 'freddie-gibbs', meta: 'European tours', text: 'Grammy-nominated rapper Freddie Gibbs brought his signature sound to audiences across Europe through a series of live performances and tours.', photo: 'freddie-gibbs.jpg', focus: '40% 50%' },
   ],
 };
