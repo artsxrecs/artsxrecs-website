@@ -1214,6 +1214,13 @@ a.partner:focus-visible { box-shadow: clamp(6px, 0.6vw, 10px) clamp(6px, 0.6vw, 
   .partner { min-height: 96px; padding: 16px 12px; font-size: 13px; }
 }
 
+/* ---------- Impressum ---------- */
+
+.legal { display: grid; gap: clamp(32px, 5vh, 48px); max-width: 640px; }
+.legal h2 { margin: 0 0 10px; }
+.legal p, .legal address { margin: 0; font-style: normal; }
+.legal .legal-note { margin-top: 14px; }
+
 /* ---------- Footer ---------- */
 
 .site-footer {
@@ -1242,6 +1249,8 @@ a.partner:focus-visible { box-shadow: clamp(6px, 0.6vw, 10px) clamp(6px, 0.6vw, 
 .footer-links { display: flex; gap: 28px; }
 .footer-links a { text-decoration: none; }
 .footer-links a:hover { text-decoration: underline; text-underline-offset: 5px; }
+/* Three links (Instagram, Contact, Impressum) must fit a phone's width */
+@media (max-width: 720px) { .footer-links { flex-wrap: wrap; gap: 12px 16px; } }
 
 /* On touch screens the small text links get a bigger invisible tap area (they are 17-23px tall). */
 @media (pointer: coarse) {

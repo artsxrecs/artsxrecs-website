@@ -196,6 +196,20 @@ window.ARTISTS = [
     }
   },
   {
+    "slug": "clinton-fearon",
+    "name": "Clinton Fearon",
+    "note": "",
+    "status": "current",
+    "photo": "clinton-fearon.jpg",
+    "bio": "Clinton Fearon is a Jamaican singer, songwriter and bassist whose career spans more than five decades. Best known for his 18 years with the legendary roots reggae band The Gladiators, he helped shape classics such as “Chatty Chatty Mouth” and “Richman Poorman.” He also worked with influential producers including Coxsone Dodd and Lee “Scratch” Perry. Since launching his solo career, Fearon has continued to bring his distinctive voice, soulful melodies and socially conscious songwriting to audiences worldwide, remaining an influential figure in roots reggae.",
+    "links": {
+      "spotify": "https://open.spotify.com/artist/2mSiPzmzBCGS7p6tEuRuTd",
+      "appleMusic": "https://music.apple.com/us/artist/clinton-fearon/152549133",
+      "instagram": "https://www.instagram.com/clintonfearon/",
+      "youtube": "https://www.youtube.com/channel/UC-obnbseuVG2wgfovUJo53Q"
+    }
+  },
+  {
     "slug": "the-cool-kids",
     "name": "The Cool Kids",
     "note": "",
