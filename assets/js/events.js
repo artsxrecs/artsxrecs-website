@@ -10,21 +10,24 @@ window.EVENTS = [
     venue: '',
     tickets: '',
   },
+  // Doha Film Festival (DFF Music) shows: ticket links from the client, 2026-11-09; date, time and venue as on those pages.
   {
+    // Sun 22 Nov, 5:30 PM, with Intibint and Dana Salah.
     date: '2026-11-22',
     artist: 'tara',
     city: 'Doha',
     country: 'Qatar',
-    venue: '',
-    tickets: '',
+    venue: 'Geekdom, Lusail Boulevard',
+    tickets: 'https://www.dohafilm.com/en/contents/e115dbe6-ba65-4700-aa78-8ad52d3a6eaf',
   },
   {
-    date: '2026-11-22',
+    // Tue 24 Nov, 5:30 PM, with Mishaal Tamer and Yuna. Was 22 Nov here until the ticket page showed the 24th.
+    date: '2026-11-24',
     artist: 'elmiene',
     city: 'Doha',
     country: 'Qatar',
-    venue: '',
-    tickets: '',
+    venue: 'Geekdom, Lusail Boulevard',
+    tickets: 'https://www.dohafilm.com/en/contents/c43ce106-0ef8-416d-86f2-abc3583b8a33',
   },
   // Toshiki Soejima European tour: ticket links from the client, 2026-11-09. London has two shows the same day.
   {
