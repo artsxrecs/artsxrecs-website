@@ -996,6 +996,55 @@ a.event-tickets:hover .arrow { transform: translateX(4px); }
 
 .events-empty { padding: 32px 0; border-top: 1px solid var(--line); color: var(--ink-soft); font-style: italic; }
 
+/* Artist filter above the upcoming dates (client, 2026-11-09). A dropdown, so it stays one line however many artists
+   are on tour. Closed, it reads like the Upcoming/Past tabs: caps on a thin line, a mint underline once an artist is
+   chosen. Browsers that can style the open list (Chrome, Edge) show it in the site's type; the rest show their own. */
+.event-filter { display: flex; align-items: baseline; gap: 18px; margin: 0 0 clamp(32px, 5vh, 52px); }
+.event-filter[hidden] { display: none; }
+.filter-select {
+  appearance: none;
+  min-width: 0;
+  max-width: 100%;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%232b2926' stroke-width='1.2'/%3E%3C/svg%3E") no-repeat right 2px center / 10px 6px;
+  color: var(--charcoal);
+  cursor: pointer;
+  padding: 6px 30px 8px 0;
+  line-height: 1.2;
+  transition: border-color 0.25s;
+}
+.filter-select:hover { border-bottom-color: var(--charcoal); }
+.filter-select.is-set { border-bottom: 2px solid var(--mint); padding-bottom: 7px; }
+.filter-select:focus-visible { outline: 1px solid var(--charcoal); outline-offset: 6px; }
+@supports (appearance: base-select) {
+  .filter-select, .filter-select::picker(select) { appearance: base-select; }
+  .filter-select::picker-icon { display: none; }
+  .filter-select::picker(select) {
+    min-width: max(anchor-size(width), 240px);
+    max-height: 60vh;
+    max-height: stretch; /* stops at the window edge (less the margins), so on a short laptop the list scrolls */
+    margin: 10px 0 20px;
+    padding: 8px 0;
+    scrollbar-width: thin;
+    scrollbar-color: var(--stone-deep) transparent;
+    border: 1px solid var(--line);
+    border-radius: 0;
+    background: var(--main);
+    box-shadow: 0 22px 44px -26px rgba(41, 49, 51, 0.5);
+  }
+  .filter-select option {
+    gap: 12px;
+    padding: 12px 22px;
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+  .filter-select option::checkmark { content: ''; width: 6px; height: 6px; background: var(--mint); order: -1; }
+  .filter-select option:hover, .filter-select option:focus-visible { background: var(--main-deep); color: var(--charcoal); outline: 0; }
+  .filter-select option:checked { color: var(--charcoal); }
+}
+
 @media (max-width: 860px) {
   .event {
     grid-template-columns: 1fr auto;

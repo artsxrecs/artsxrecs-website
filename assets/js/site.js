@@ -174,7 +174,7 @@
         <span class="event-venue ${e.venue ? '' : 'pending'}">${e.venue ? esc(e.venue) : 'Venue to be announced'}</span>
         ${
           e.tickets
-            ? `<a class="event-tickets caps" href="${esc(e.tickets)}" target="_blank" rel="noopener">Tickets <span class="arrow">→</span></a>`
+            ? `<a class="event-tickets caps" href="${esc(e.tickets)}" target="_blank" rel="noopener">${esc(e.ticketsLabel || 'Tickets')} <span class="arrow">→</span></a>`
             : `<span class="event-tickets caps pending">Tickets soon</span>`
         }
       </li>`;
@@ -344,11 +344,46 @@
     document.querySelector('[data-count="upcoming"]').textContent = upcoming.length;
     document.querySelector('[data-count="past"]').textContent = past.length;
 
-    tabs(document.querySelector('.page-head'), ['upcoming', 'past'], (key) => {
-      const rows = key === 'upcoming' ? upcoming : past;
+    // Artist filter (client, 2026-11-09): a dropdown of the artists with upcoming dates, A–Z ignoring "The".
+    // It belongs to the Upcoming tab and hides on Past, or when fewer than two artists have dates.
+    // ?artist=<slug> keeps a filtered list shareable (e.g. one artist's tour).
+    const filter = document.getElementById('event-filter');
+    const select = document.getElementById('artist-filter');
+    const nameOf = (slug) => (bySlug(slug) || { name: slug }).name;
+    const sortKey = (slug) => nameOf(slug).replace(/^The\s+/i, '');
+    const onTour = [...new Set(upcoming.map((e) => e.artist))].sort((a, b) =>
+      sortKey(a).localeCompare(sortKey(b), 'en', { sensitivity: 'base' })
+    );
+    let chosen = new URLSearchParams(location.search).get('artist');
+    if (!onTour.includes(chosen)) chosen = null;
+    let tab = 'upcoming';
+
+    select.replaceChildren(new Option('All artists', ''), ...onTour.map((slug) => new Option(nameOf(slug), slug)));
+
+    const render = () => {
+      const useFilter = tab === 'upcoming' && onTour.length > 1;
+      filter.hidden = !useFilter;
+      select.value = chosen || '';
+      select.classList.toggle('is-set', !!chosen);
+      let rows = tab === 'upcoming' ? upcoming : past;
+      if (useFilter && chosen) rows = rows.filter((e) => e.artist === chosen);
       list.innerHTML = rows.length
         ? `<ul class="events">${rows.map(eventRow).join('')}</ul>`
-        : `<p class="events-empty">${key === 'upcoming' ? 'New dates will be announced here.' : 'Past events will be listed here.'}</p>`;
+        : `<p class="events-empty">${tab === 'upcoming' ? 'New dates will be announced here.' : 'Past events will be listed here.'}</p>`;
+    };
+
+    select.addEventListener('change', () => {
+      chosen = select.value || null;
+      const url = new URL(location.href);
+      if (chosen) url.searchParams.set('artist', chosen);
+      else url.searchParams.delete('artist');
+      history.replaceState(null, '', url);
+      render();
+    });
+
+    tabs(document.querySelector('.page-head'), ['upcoming', 'past'], (key) => {
+      tab = key;
+      render();
     });
   }
 })();
