@@ -1,0 +1,54 @@
+{
+  "recent": [
+    {
+      "artist": "Elmiene",
+      "meta": "Doha Film Festival",
+      "text": "Confirmed to perform at the Doha Film Festival.",
+      "tag": "",
+      "photo": "/assets/img/news/elmiene.jpg",
+      "focus": "35% 50%"
+    },
+    {
+      "artist": "Toshiki Soejima",
+      "meta": "European tour",
+      "text": "Japanese guitarist Toshiki Soejima kicks off his first-ever European tour this month, presented by ArtsxRecs.",
+      "tag": "",
+      "photo": "/assets/img/news/toshiki-soejima.jpg",
+      "focus": "35% 50%"
+    },
+    {
+      "artist": "Oddisee",
+      "meta": "Washington, D.C. · Adams Morgan PorchFest",
+      "text": "Confirmed as a headliner in Washington, D.C., with another upcoming appearance at Adams Morgan PorchFest.",
+      "tag": "Management: ArtsxRecs",
+      "photo": "/assets/img/news/oddisee.jpg",
+      "focus": "80% 50%"
+    }
+  ],
+  "past": [
+    {
+      "artist": "The Roots",
+      "meta": "Warsaw · July 2026",
+      "text": "Legendary hip-hop band The Roots leave hip-hop and jazz enthusiasts stunned with their first-ever headline performance in Poland, taking the stage in Warsaw on July 7, 2026.",
+      "tag": "",
+      "photo": "/assets/img/news/the-roots.jpg",
+      "focus": "35% 50%"
+    },
+    {
+      "artist": "The Alchemist",
+      "meta": "Oslo · August 2026",
+      "text": "Hip-hop icon and legendary producer The Alchemist delivers an exclusive performance in Oslo, Norway, on August 28, 2026, at Dattera til Hagen.",
+      "tag": "",
+      "photo": "/assets/img/news/the-alchemist.jpg",
+      "focus": "80% 50%"
+    },
+    {
+      "artist": "Freddie Gibbs",
+      "meta": "European tours",
+      "text": "Grammy-nominated rapper Freddie Gibbs brought his signature sound to audiences across Europe through a series of live performances and tours.",
+      "tag": "",
+      "photo": "/assets/img/news/freddie-gibbs.jpg",
+      "focus": "40% 50%"
+    }
+  ]
+}

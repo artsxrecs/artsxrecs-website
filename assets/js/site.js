@@ -1,13 +1,67 @@
-// ArtsxRecs — renders the roster, profiles and events from artists.js / events.js.
-(() => {
+// ArtsxRecs — renders the roster, profiles, news and events from the files in data/.
+// The client edits those files in Pages CMS (app.pagescms.org; the editor is set up in .pages.yml).
+(async () => {
   const DRAFT = true; // draft shows "coming soon" placeholders for missing texts
-
-  const ARTISTS = window.ARTISTS || [];
-  const EVENTS = (window.EVENTS || []).slice().sort((a, b) => a.date.localeCompare(b.date));
   const page = document.body.dataset.page;
 
-  const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  // ---- data: each page loads only the files it shows
+  const NEEDS = {
+    home: ['artists', 'home-news'],
+    artists: ['artists'],
+    artist: ['artists', 'events'],
+    events: ['artists', 'events'],
+    news: ['artists', 'news'],
+  };
+  const data = {};
+  try {
+    await Promise.all(
+      (NEEDS[page] || []).map(async (name) => {
+        const res = await fetch(`data/${name}.json`);
+        if (!res.ok) throw new Error(`data/${name}.json: ${res.status}`);
+        data[name] = await res.json();
+      })
+    );
+  } catch (err) {
+    console.error(err);
+  }
+
+  // Names compared the way people type them: no accents, any case, "The" ignored (TÄRA = Tara, The Roots = Roots).
+  const plain = (s) => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
+  const sortName = (name) => plain(name).replace(/^the\s+/, '');
+  const slugify = (name) => plain(name).replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+
+  // Artists A–Z (ignoring "The"), so a new artist lands in the right place wherever the editor adds it.
+  // An artist without a web name (slug) gets one made from the name.
+  // Each file holds one list under a name ({ "artists": [...] }), so the editor can fold the entries away.
+  const listOf = (d, key) => (Array.isArray(d) ? d : (d && d[key]) || []);
+  const ARTISTS = listOf(data.artists, 'artists')
+    .filter((a) => a && a.name)
+    .map((a) => ({ ...a, slug: a.slug || slugify(a.name), links: a.links || {} }))
+    .sort((x, y) => (sortName(x.name) < sortName(y.name) ? -1 : sortName(x.name) > sortName(y.name) ? 1 : 0));
   const bySlug = (slug) => ARTISTS.find((a) => a.slug === slug);
+  // Events and news name their artist as the editor typed it (usually the name): find that artist's slug.
+  // Anything that matches no artist is kept as typed and shown without a link.
+  const withArtist = (item) => {
+    const a = item.artist ? bySlug(item.artist) || ARTISTS.find((x) => sortName(x.name) === sortName(item.artist)) : null;
+    return { ...item, artist: a ? a.slug : item.artist || '' };
+  };
+  const EVENTS = listOf(data.events, 'events')
+    .filter((e) => e && e.date)
+    .map(withArtist)
+    .sort((a, b) => a.date.localeCompare(b.date));
+  const NEWS = listOf(data.news, 'news').filter((s) => s && s.title).map(withArtist);
+  const homeNews = data['home-news'] || {};
+  const HOME_NEWS = { recent: (homeNews.recent || []).map(withArtist), past: (homeNews.past || []).map(withArtist) };
+
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  // Photos: the editor stores a path ("/assets/img/artists/x.jpg"); older entries a bare file name.
+  const imgPath = (p, dir) => (String(p).includes('/') ? String(p).replace(/^\/+/, '') : `assets/img/${dir}/${p}`);
+  // The small copy of an artist photo (for rows and cards); new uploads have none yet, so <img> falls back to the full one.
+  const smallImg = (p) => {
+    const full = imgPath(p, 'artists');
+    const small = full.replace(/^(assets\/img\/artists\/)(?!small\/)([^/]+)$/, '$1small/$2');
+    return `src="${esc(small)}"${small === full ? '' : ` onerror="this.onerror=null;this.src='${esc(full)}'"`}`;
+  };
   const MONTHS = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
   const fmtDate = (iso) => {
     const [y, m, d] = iso.split('-').map(Number);
@@ -25,14 +79,14 @@
   };
   // Stable tone per artist so the placeholder grid has rhythm, not a pattern.
   const TONES = ['var(--main-deep)', '#dcdbd0', '#d2d1c5']; // shades of their Soft Ivory
-  const tone = (slug) => TONES[[...slug].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7) % TONES.length];
+  const tone = (slug) => TONES[[...String(slug || '')].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7) % TONES.length];
 
   // Photos fill their frames (client, like mindfeederz.com); crops lose the bottom, not the top (CSS),
   // and "focus" moves the crop where someone stands off-centre.
   const media = (a, eager) =>
     `<div class="tile-media" style="--tone:${tone(a.slug)}">${
       a.photo
-        ? `<img src="assets/img/artists/${esc(a.photo)}" alt="${esc(a.name)}"${
+        ? `<img src="${esc(imgPath(a.photo, 'artists'))}" alt="${esc(a.name)}"${
             a.focus ? ` style="object-position:${esc(a.focus)}"` : ''
           } decoding="async" ${eager ? '' : 'loading="lazy"'}>`
         : `<span class="tile-initials" aria-hidden="true">${esc(initials(a.name))}</span>`
@@ -118,16 +172,22 @@
       ['instagram', 'Instagram'],
       ['youtube', 'YouTube'],
     ];
-    const links = LINKS.filter(([k]) => a.links[k]) // only links we have: an empty one would look broken
-      .flatMap(([k, label]) => {
-        const v = a.links[k];
-        // A duo can have an account each: [["Blu", url], ["Exile", url]] shows "Instagram · Blu", "Instagram · Exile".
-        const list = Array.isArray(v) ? v.map(([who, url]) => [`${label} · ${who}`, url]) : [[label, v]];
-        return list.map(
-          ([text, url]) =>
-            `<li><a class="caps text-link" href="${esc(url || '#')}" ${url ? 'target="_blank" rel="noopener"' : ''}>${esc(text)}</a></li>`
-        );
-      })
+    // Only links we have (an empty one would look broken). "Extra links" (e.g. a duo's two Instagrams,
+    // "Instagram · Blu") sit next to the platform their label starts with; any others come last.
+    const extras = (a.extraLinks || []).filter((x) => x && x.url);
+    const placed = new Set();
+    const items = [];
+    LINKS.forEach(([k, label]) => {
+      const v = a.links[k];
+      if (Array.isArray(v)) v.forEach(([who, url]) => items.push([`${label} · ${who}`, url]));
+      else if (v) items.push([label, v]);
+      extras.forEach((x) => {
+        if (!placed.has(x) && String(x.label || '').startsWith(label)) placed.add(x), items.push([x.label, x.url]);
+      });
+    });
+    extras.forEach((x) => placed.has(x) || items.push([x.label || 'Website', x.url]));
+    const links = items
+      .map(([text, url]) => `<li><a class="caps text-link" href="${esc(url)}" target="_blank" rel="noopener">${esc(text)}</a></li>`)
       .join('');
 
     const upcoming = EVENTS.filter((e) => e.artist === a.slug && isUpcoming(e));
@@ -207,7 +267,7 @@
     }
 
     // Recent News and Past News: compact cards, each linking to the artist.
-    const HOME = window.HOME_NEWS || {};
+    const HOME = HOME_NEWS;
     document.querySelectorAll('[data-home]').forEach((list) => {
       list.innerHTML = (HOME[list.dataset.home] || [])
         .map((story) => {
@@ -255,15 +315,15 @@
   // small version is plenty at this size), else a placeholder with the initials. The story's "focus"
   // can move the crop for its frame (Toshiki: less ceiling).
   function storyPhoto(story, a) {
-    if (story.logo && !story.photo) return `<img class="story-logo" src="assets/img/partners/${esc(story.logo)}" alt="" loading="lazy" decoding="async">`;
+    if (story.logo && !story.photo) return `<img class="story-logo" src="${esc(imgPath(story.logo, 'partners'))}" alt="" loading="lazy" decoding="async">`;
     if (story.photo) {
-      return `<img src="assets/img/news/${esc(story.photo)}" alt=""${
+      return `<img src="${esc(imgPath(story.photo, 'news'))}" alt=""${
         story.focus ? ` style="object-position:${esc(story.focus)}"` : ''
       } loading="lazy" decoding="async">`;
     }
     if (a && a.photo) {
       const focus = story.focus || a.focus;
-      return `<img src="assets/img/artists/small/${esc(a.photo)}" alt=""${
+      return `<img ${smallImg(a.photo)} alt=""${
         focus ? ` style="object-position:${esc(focus)}"` : ''
       } loading="lazy" decoding="async">`;
     }
@@ -276,7 +336,7 @@
     if (!people.length) return;
     const order = people.slice().sort(() => Math.random() - 0.5);
     const tile = (a) =>
-      `<span class="row-tile"><img src="assets/img/artists/small/${esc(a.photo)}" alt=""${
+      `<span class="row-tile"><img ${smallImg(a.photo)} alt=""${
         a.focus ? ` style="object-position:${esc(a.focus)}"` : ''
       } decoding="async"></span>`;
     const set = order.map(tile).join('');
@@ -289,7 +349,7 @@
   // ---- News page: newest first by date (client: chronological). The sort is stable, so stories on the
   // same day keep their order in news.js; a story without a date yet counts as the newest.
   if (page === 'news') {
-    document.getElementById('news').innerHTML = (window.NEWS || [])
+    document.getElementById('news').innerHTML = NEWS
       .slice()
       .sort((x, y) => (y.date || '9999').localeCompare(x.date || '9999'))
       .map((story) => {

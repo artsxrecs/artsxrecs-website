@@ -1,0 +1,310 @@
+# Pages CMS editor for artsxrecs.com: open app.pagescms.org, sign in, choose artsxrecs-website.
+# Every "Save" changes the website within about a minute (one Netlify deploy each, so save once per batch of changes).
+# The site reads these files in data/; see assets/js/site.js.
+
+settings:
+  hide: true
+
+media:
+  - name: artists
+    label: Artist photos
+    input: assets/img/artists
+    output: /assets/img/artists
+    extensions: [jpg, jpeg, png, webp]
+    rename: safe
+  - name: news
+    label: News photos
+    input: assets/img/news
+    output: /assets/img/news
+    extensions: [jpg, jpeg, png, webp]
+    rename: safe
+  - name: partners
+    label: Partner logos
+    input: assets/img/partners
+    output: /assets/img/partners
+    extensions: [svg, png, jpg, jpeg, webp]
+    rename: safe
+
+content:
+  # ---------------------------------------------------------------- Events
+  - name: events
+    label: Events
+    type: file
+    path: data/events.json
+    format: json
+    fields:
+      - name: events
+        label: Events
+        description: "The website sorts them by date by itself. Dates before today move to \"Past\" automatically, so there is no need to delete old ones."
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{date} · {artist} · {city}"
+        fields:
+          - name: date
+            label: Date
+            type: date
+            required: true
+            options:
+              format: yyyy-MM-dd
+          - name: artist
+            label: Artist
+            type: string
+            required: true
+            description: "The artist's name exactly as on the website, e.g. Toshiki Soejima. It links the event to their page."
+          - name: city
+            label: City
+            type: string
+            required: true
+          - name: country
+            label: Country
+            type: string
+            required: true
+          - name: venue
+            label: Venue
+            type: string
+            description: "Leave empty if not confirmed yet; the website then shows \"Venue to be announced\"."
+          - name: tickets
+            label: Ticket link
+            type: string
+            description: "Full link starting with https://. Leave empty and the website shows \"Tickets soon\"."
+          - name: ticketsLabel
+            label: Button text
+            type: string
+            description: "Optional. Leave empty for \"Tickets\"; e.g. write Waitlist for a sold-out show."
+
+  # ---------------------------------------------------------------- News page
+  - name: news
+    label: News
+    type: file
+    path: data/news.json
+    format: json
+    fields:
+      - name: news
+        label: News stories
+        description: "The News page shows them newest first by date."
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{date} · {title}"
+        fields:
+          - name: date
+            label: Date
+            type: date
+            required: true
+            options:
+              format: yyyy-MM-dd
+          - name: title
+            label: Headline
+            type: string
+            required: true
+            description: "Usually the artist's or partner's name, e.g. Hyphen Dash."
+          - name: text
+            label: Text
+            type: text
+            required: true
+            description: "One or two short sentences."
+          - name: artist
+            label: Artist
+            type: string
+            description: "The artist's name exactly as on the website. Links the story to their page and uses their photo. Leave empty for partner news."
+          - name: photo
+            label: Photo
+            type: image
+            description: "Optional. Without one, the artist's portrait is used."
+            options:
+              media: news
+          - name: logo
+            label: Partner logo
+            type: image
+            description: "For partner news only (shown whole on a plain tile)."
+            options:
+              media: partners
+          - name: link
+            label: Partner website
+            type: string
+            description: "For partner news only. Full link starting with https://"
+          - name: focus
+            label: Photo crop (advanced)
+            type: string
+            description: "Leave empty. Only to move the crop, e.g. 50% 30% shows more of the top."
+
+  # ---------------------------------------------------------------- Homepage news cards
+  - name: home
+    label: Homepage news
+    type: file
+    path: data/home-news.json
+    format: json
+    fields:
+      - name: recent
+        label: Recent News (3 cards)
+        type: object
+        list:
+          max: 3
+          collapsible:
+            collapsed: true
+            summary: "{artist} · {meta}"
+        fields:
+          - name: artist
+            label: Artist
+            type: string
+            required: true
+            description: "The artist's name exactly as on the website. The card links to their page."
+          - name: meta
+            label: Small line above the name
+            type: string
+            description: "e.g. Doha Film Festival, or Warsaw · July 2026"
+          - name: text
+            label: Text
+            type: text
+            required: true
+          - name: tag
+            label: Mint label
+            type: string
+            description: "Optional, e.g. Management: ArtsxRecs"
+          - name: photo
+            label: Photo
+            type: image
+            description: "Landscape photo works best. Without one, the artist's portrait is used."
+            options:
+              media: news
+          - name: focus
+            label: Photo crop (advanced)
+            type: string
+            description: "Leave empty. Only to move the crop, e.g. 35% 50% shows more of the left side."
+      - name: past
+        label: Past News (3 cards)
+        type: object
+        list:
+          max: 3
+          collapsible:
+            collapsed: true
+            summary: "{artist} · {meta}"
+        fields:
+          - name: artist
+            label: Artist
+            type: string
+            required: true
+            description: "The artist's name exactly as on the website. The card links to their page."
+          - name: meta
+            label: Small line above the name
+            type: string
+            description: "e.g. Doha Film Festival, or Warsaw · July 2026"
+          - name: text
+            label: Text
+            type: text
+            required: true
+          - name: tag
+            label: Mint label
+            type: string
+            description: "Optional, e.g. Management: ArtsxRecs"
+          - name: photo
+            label: Photo
+            type: image
+            description: "Landscape photo works best. Without one, the artist's portrait is used."
+            options:
+              media: news
+          - name: focus
+            label: Photo crop (advanced)
+            type: string
+            description: "Leave empty. Only to move the crop, e.g. 35% 50% shows more of the left side."
+
+  # ---------------------------------------------------------------- Artists
+  - name: artists
+    label: Artists
+    type: file
+    path: data/artists.json
+    format: json
+    fields:
+      - name: artists
+        label: Artists
+        description: "The website puts them in A–Z order by itself, so a new artist can be added at the end."
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{name} ({status})"
+        fields:
+          - name: name
+            label: Name
+            type: string
+            required: true
+          - name: status
+            label: Current or past
+            type: select
+            required: true
+            options:
+              values:
+                - name: current
+                  label: Current artist
+                - name: past
+                  label: Past artist
+          - name: photo
+            label: Photo
+            type: image
+            description: "Portrait, JPG, about 1400 px tall and under 1 MB. The frames crop from the bottom, so keep heads near the top."
+            options:
+              media: artists
+          - name: bio
+            label: Biography
+            type: text
+            description: "Leave an empty line between paragraphs. Empty = \"Biography coming soon.\""
+          - name: collab
+            label: In collaboration with
+            type: string
+            description: "Partner name, e.g. Bacana. Shown on the artist's page as \"In collaboration with Bacana\"."
+          - name: collabLink
+            label: Partner website
+            type: string
+            description: "Optional. Full link starting with https://"
+          - name: managed
+            label: Managed by ArtsxRecs
+            type: boolean
+            description: "Shows \"Management: ArtsxRecs\" under the name on the artist's page."
+          - name: links
+            label: Links
+            type: object
+            description: "Full links starting with https://. Empty links are hidden."
+            fields:
+              - name: spotify
+                label: Spotify
+                type: string
+              - name: appleMusic
+                label: Apple Music
+                type: string
+              - name: instagram
+                label: Instagram
+                type: string
+              - name: youtube
+                label: YouTube
+                type: string
+          - name: extraLinks
+            label: Extra links
+            type: object
+            description: "Only if needed, e.g. a duo with two Instagram accounts (label \"Instagram · Exile\")."
+            list: true
+            fields:
+              - name: label
+                label: Label
+                type: string
+              - name: url
+                label: Link
+                type: string
+          - name: note
+            label: Line under the name
+            type: string
+            description: "Optional, e.g. a group (Wu-Tang Clan). Also shown on the Artists page."
+          - name: noteLink
+            label: Link for that line
+            type: string
+            description: "Optional."
+          - name: slug
+            label: Web name (advanced)
+            type: string
+            description: "The name in the page address (artist.html?a=...). Leave EMPTY for a new artist; it is made from the name. Don't change it for existing artists, or old links stop working."
+          - name: focus
+            label: Photo crop (advanced)
+            type: string
+            description: "Leave empty. Only if someone stands off-centre, e.g. 82% 50%."

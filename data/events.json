@@ -1,0 +1,85 @@
+{
+  "events": [
+    {
+      "date": "2026-11-07",
+      "artist": "Oddisee",
+      "city": "Washington, DC",
+      "country": "United States",
+      "venue": "",
+      "tickets": "",
+      "ticketsLabel": ""
+    },
+    {
+      "date": "2026-11-22",
+      "artist": "TÄRA",
+      "city": "Doha",
+      "country": "Qatar",
+      "venue": "Geekdom, Lusail Boulevard",
+      "tickets": "https://www.dohafilm.com/en/contents/e115dbe6-ba65-4700-aa78-8ad52d3a6eaf",
+      "ticketsLabel": ""
+    },
+    {
+      "date": "2026-11-24",
+      "artist": "Elmiene",
+      "city": "Doha",
+      "country": "Qatar",
+      "venue": "Geekdom, Lusail Boulevard",
+      "tickets": "https://www.dohafilm.com/en/contents/c43ce106-0ef8-416d-86f2-abc3583b8a33",
+      "ticketsLabel": ""
+    },
+    {
+      "date": "2026-11-28",
+      "artist": "Toshiki Soejima",
+      "city": "London",
+      "country": "United Kingdom",
+      "venue": "The Jazz Cafe · Matinee",
+      "tickets": "https://thejazzcafe.com/event/toshiki-soejima-matinee-show/",
+      "ticketsLabel": ""
+    },
+    {
+      "date": "2026-11-28",
+      "artist": "Toshiki Soejima",
+      "city": "London",
+      "country": "United Kingdom",
+      "venue": "The Jazz Cafe · Evening, sold out",
+      "tickets": "https://thejazzcafe.com/event/toshiki-soejima-evening-show/",
+      "ticketsLabel": "Waitlist"
+    },
+    {
+      "date": "2026-12-01",
+      "artist": "Toshiki Soejima",
+      "city": "Berlin",
+      "country": "Germany",
+      "venue": "Gretchen",
+      "tickets": "https://www.tixforgigs.com/Event/76108",
+      "ticketsLabel": ""
+    },
+    {
+      "date": "2026-12-02",
+      "artist": "Toshiki Soejima",
+      "city": "Hamburg",
+      "country": "Germany",
+      "venue": "Bahnhof Pauli",
+      "tickets": "https://www.eventim.de/en/event/toshiki-soejima-bahnhof-pauli-22012101/",
+      "ticketsLabel": ""
+    },
+    {
+      "date": "2026-12-04",
+      "artist": "Toshiki Soejima",
+      "city": "Milan",
+      "country": "Italy",
+      "venue": "Circolo Magnolia, Segrate",
+      "tickets": "https://link.dice.fm/D2d124fea3d3",
+      "ticketsLabel": ""
+    },
+    {
+      "date": "2026-12-06",
+      "artist": "Toshiki Soejima",
+      "city": "Düsseldorf",
+      "country": "Germany",
+      "venue": "Ampere (Stahlwerk)",
+      "tickets": "https://www.eventim.de/en/event/toshiki-soejima-ampere-22048117/",
+      "ticketsLabel": ""
+    }
+  ]
+}
