@@ -1,4 +1,4 @@
-// ArtsxRecs news (client's list 2026-10-27, dates 2026-10-28, changes 2026-10-29 and 2026-11-01).
+// ArtsxRecs news (client's list 2026-10-27, dates 2026-10-28, changes 2026-10-29, 2026-11-01 and 2026-11-16).
 //
 // NEWS: the News page, shown newest first by date (client: chronological order); stories on the same
 // day keep the order they have here. News starts from June 1, 2026.
@@ -16,8 +16,9 @@
 // HOME_NEWS: the cards on the homepage, in this order: "recent" (Recent News) and "past" (Past News).
 //   meta: the small line above the name. tag: an optional mint label (Oddisee: his management).
 window.NEWS = [
+  { artist: 'hyphen-dash', title: 'Hyphen Dash', text: 'Confirmed for Nova Jazz Festival in Yverdon, Switzerland.', date: '2026-11-07', photo: '' },
   { artist: 'elmiene', title: 'Elmiene', text: 'Confirmed to perform at the Doha Film Festival.', date: '2026-11-04', photo: '' },
-  { artist: 'tara', title: 'TÄRA', text: 'Confirmed to perform at the Doha Film Festival on November 22, 2026.', date: '2026-11-04', photo: '' },
+  { artist: 'tara', title: 'TÄRA', text: 'Confirmed to perform at the Doha Film Festival.', date: '2026-11-04', photo: '' },
   { artist: 'oddisee', title: 'Oddisee', text: 'Confirmed as a headliner in Washington, D.C., with another upcoming appearance at Adams Morgan PorchFest.', date: '2026-11-02', photo: '' },
   { artist: 'hyphen-dash', title: 'Hyphen Dash', text: 'Announcing their new EP, Dark Water.', date: '2026-10-23', photo: '' },
   { artist: 'toshiki-soejima', title: 'Toshiki Soejima', text: 'ArtsxRecs brings Toshiki Soejima on his first-ever European tour.', date: '2026-10-20', photo: '', focus: '50% 50%' },

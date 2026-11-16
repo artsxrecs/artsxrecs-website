@@ -135,9 +135,9 @@
     root.innerHTML = `
       <a class="back label reveal" href="artists.html${a.status === 'past' ? '#past' : ''}">← All artists</a>
       <div class="profile-media reveal">${media(a, true)}</div>
-      <div>
+      <div class="profile-info">
         <p class="label reveal" style="--i:1">${a.status === 'current' ? 'Current artist' : 'Past artist'}</p>
-        <h1 class="display profile-name reveal" style="--i:2">${esc(a.name)}</h1>
+        <h1 class="display profile-name reveal" style="--i:2;--chars:${Math.max(...a.name.split(/\s+/).map((w) => [...w].length))}">${esc(a.name)}</h1>
         ${
           a.note
             ? `<p class="label profile-note reveal" style="--i:2">${
@@ -145,8 +145,19 @@
               }</p>`
             : ''
         }
+        ${a.managed ? `<p class="label profile-note reveal" style="--i:2">Management: ArtsxRecs</p>` : ''}
         <div class="profile-bio reveal" style="--i:3">${
-          a.bio ? `<p>${esc(a.bio)}</p>` : `<p class="pending">Biography coming soon.</p>`
+          a.bio
+            ? a.bio.split(/\n\s*\n/).map((para) => `<p>${esc(para.trim())}</p>`).join('')
+            : `<p class="pending">Biography coming soon.</p>`
+        }${
+          a.collab
+            ? `<p class="profile-collab">In collaboration with ${
+                a.collabLink
+                  ? `<a class="text-link" href="${esc(a.collabLink)}" target="_blank" rel="noopener">${esc(a.collab)}</a>`
+                  : esc(a.collab)
+              }</p>`
+            : ''
         }</div>
         ${links ? `<div class="profile-section reveal" style="--i:4"><p class="label">Listen &amp; follow</p><ul class="links">${links}</ul></div>` : ''}
         ${

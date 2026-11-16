@@ -2,7 +2,10 @@
 // photo: file inside assets/img/artists/ (leave "" until the official photo arrives).
 // focus: optional crop position for the photo (CSS object-position), e.g. "82% 50%" when the person stands at the right.
 // links: leave "" if the artist has no profile on that platform; empty links are hidden on the live site.
-// note: a short line under the name (a group, a partner); noteLink: optional link for it on the profile.
+// note: a short line under the name, also under the tile on the Artists page (e.g. a group); noteLink: optional link for it on the profile.
+// managed: true shows "Management: ArtsxRecs" under the name on the profile only (client: not on the Artists page).
+// collab: partner name, shown in the profile's info as "In collaboration with …"; collabLink: optional partner website.
+// bio: a blank line ("\n\n") starts a new paragraph.
 window.ARTISTS = [
   {
     "slug": "action-bronson",
@@ -22,6 +25,7 @@ window.ARTISTS = [
     "slug": "adrian-younge",
     "name": "Adrian Younge",
     "note": "",
+    "collab": "Bacana",
     "status": "current",
     "photo": "adrian-younge.jpg",
     "bio": "Adrian Younge is an American composer, producer and multi-instrumentalist recognised for his cinematic analogue production and ambitious musical projects. His work blends soul, jazz, hip-hop and film-score influences, often drawing inspiration from vintage recording techniques. He has collaborated with artists including Ghostface Killah and Ali Shaheed Muhammad, with whom he created The Midnight Hour. He is also a co-founder of the Jazz Is Dead project, which brings together influential musicians and contemporary audiences. His work bridges musical history with new creative approaches to recording and composition.",
@@ -78,6 +82,7 @@ window.ARTISTS = [
     "slug": "arthur-verocai",
     "name": "Arthur Verocai",
     "note": "",
+    "collab": "Bacana",
     "status": "current",
     "photo": "arthur-verocai.jpg",
     "bio": "Arthur Verocai is a Brazilian composer, arranger and musician whose work has become highly influential across jazz, soul, hip-hop and Brazilian music. His self-titled 1972 album, initially overlooked, later gained cult status for its sophisticated orchestral arrangements and innovative production. The record became especially influential among hip-hop producers and music collectors, with its compositions sampled by prominent artists. Verocai's music combines Brazilian rhythms, psychedelic influences and cinematic orchestration. His rediscovery and continued performances have introduced his work to new generations of listeners around the world.",
@@ -297,6 +302,7 @@ window.ARTISTS = [
     "slug": "elephant-gym",
     "name": "Elephant Gym",
     "note": "",
+    "collab": "Taiwanese Waves",
     "status": "current",
     "photo": "elephant-gym.jpg",
     "bio": "Elephant Gym is a Taiwanese instrumental band celebrated for its intricate rhythms, melodic bass lines and genre-crossing compositions. Their music combines math rock, jazz, funk and progressive influences. Known for technically impressive performances, the group creates complex arrangements that remain expressive and accessible. Their albums and international touring have helped introduce Taiwanese instrumental music to audiences worldwide. Their distinctive sound has made them one of the recognised names in contemporary Asian math rock.",
@@ -311,6 +317,8 @@ window.ARTISTS = [
     "slug": "elephant-kind",
     "name": "Elephant Kind",
     "note": "",
+    "collab": "The Alchemist Asia Group",
+    "collabLink": "https://alchemistasia.com",
     "status": "current",
     "photo": "elephant-kind.jpg",
     "bio": "Elephant Kind is an Indonesian alternative band known for combining indie rock, pop and electronic influences. Their music is characterised by energetic production, melodic songwriting and an adventurous creative identity. Through releases and live performances, they have developed an audience in Indonesia and internationally. Their approach reflects the growing influence of Southeast Asian alternative music on the global independent scene.",
@@ -361,6 +369,22 @@ window.ARTISTS = [
       "appleMusic": "https://music.apple.com/us/artist/freddie-gibbs/302166615",
       "instagram": "https://www.instagram.com/freddiegibbs/",
       "youtube": "https://www.youtube.com/@freddiegibbs"
+    }
+  },
+  {
+    "slug": "gabriele-poso",
+    "name": "Gabriele Poso",
+    "note": "",
+    "collab": "The Alchemist Asia Group",
+    "collabLink": "https://alchemistasia.com",
+    "status": "current",
+    "photo": "",
+    "bio": "Gabriele Poso is an Italian percussionist, multi-instrumentalist, composer and producer whose music brings together Afro-Latin rhythms, jazz, soul and Mediterranean influences. Born in Sardinia and raised in Lecce, he developed his musical approach through studies in Italy, Puerto Rico and Cuba, building a distinctive sound rooted in rhythm and experimentation.\n\nOver the years, he has collaborated with artists including Osunlade and Louie Vega and released music through labels such as Yoruba Records, BBE and Wonderwheel Recordings. His projects include Tamburo Infinito, Ritmo Italiano and his 2026 album Maraviglia, which combines Afro-Caribbean percussion, jazz and Mediterranean grooves. Known for his energetic live performances, Poso continues to connect musical traditions with contemporary sounds.",
+    "links": {
+      "spotify": "https://open.spotify.com/artist/2yApCA4GzuGb9oDS5I5Fjp",
+      "appleMusic": "https://music.apple.com/us/artist/gabriele-poso/271473482",
+      "instagram": "https://www.instagram.com/gabrieleposo/",
+      "youtube": "https://www.youtube.com/user/gabrieleposomusic"
     }
   },
   {
@@ -463,6 +487,22 @@ window.ARTISTS = [
     }
   },
   {
+    "slug": "kassa-overall",
+    "name": "Kassa Overall",
+    "note": "",
+    "collab": "The Alchemist Asia Group",
+    "collabLink": "https://alchemistasia.com",
+    "status": "current",
+    "photo": "",
+    "bio": "A Seattle native, Kassa Overall is a Grammy-nominated jazz artist, drummer, emcee, singer and producer. He seamlessly blends jazz, hip-hop and avant-garde experimentation into a sound uniquely his own. His music is both innovative and accessible, pushing the boundaries of genre while remaining deeply engaging.\n\nKassa Overall has released six critically acclaimed mixtapes and albums, including I Think I’m Good and Go Get Ice Cream and Listen to Jazz. His project ANIMALS explores the complexities of his identity as an artist and a Black man in America, featuring collaborations with an eclectic mix of musicians, from Danny Brown and Lil B to Nick Hakim and Vijay Iyer.",
+    "links": {
+      "spotify": "https://open.spotify.com/artist/7qzzcFzliEAHMlDA9qaRVf",
+      "appleMusic": "https://music.apple.com/us/artist/kassa-overall/596162130",
+      "instagram": "https://www.instagram.com/kassaoverall/",
+      "youtube": "https://www.youtube.com/channel/UCJIiT46e5RSJYGMl3QnfsPw"
+    }
+  },
+  {
     "slug": "lute",
     "name": "Lute",
     "note": "",
@@ -509,6 +549,7 @@ window.ARTISTS = [
     "slug": "marisa-monte",
     "name": "Marisa Monte",
     "note": "",
+    "collab": "Bacana",
     "status": "current",
     "photo": "marisa-monte.jpg",
     "bio": "Marisa Monte is one of Brazil's most celebrated singers and songwriters, known for her distinctive voice and contributions to Brazilian popular music. Her career blends samba, MPB, pop and contemporary influences, creating a sound recognised internationally. She is also a member of the acclaimed musical project Tribalistas alongside Arnaldo Antunes and Carlinhos Brown. Her catalogue includes influential recordings such as Verde, Anil, Amarelo, Cor-de-Rosa e Carvão and Memórias, Crônicas e Declarações de Amor. A multiple Latin Grammy Award winner, she remains one of the defining voices of modern Brazilian music.",
@@ -592,7 +633,8 @@ window.ARTISTS = [
   {
     "slug": "oddisee",
     "name": "Oddisee",
-    "note": "Management: ArtsxRecs",
+    "note": "",
+    "managed": true,
     "status": "current",
     "photo": "oddisee.jpg",
     "bio": "Oddisee is an American rapper, producer and composer known for blending hip-hop with jazz, soul and funk. His music combines thoughtful social commentary, personal storytelling and sophisticated arrangements. Albums such as The Good Fight and The Iceberg showcase his ability to balance lyrical depth with accessible, groove-driven production. He is also recognised for his dynamic live performances with a full band. His independent approach has earned him a dedicated international following.",
@@ -663,6 +705,7 @@ window.ARTISTS = [
     "slug": "roge",
     "name": "Rogê",
     "note": "",
+    "collab": "Bacana",
     "status": "current",
     "photo": "roge.jpg",
     "bio": "Rogê is a Brazilian singer-songwriter and guitarist whose music combines samba, MPB, funk and Brazilian soul. Known for his rhythmic guitar playing and warm vocal style, he draws inspiration from the rich traditions of Brazilian popular music. His work connects classic influences with contemporary songwriting and production. Through recordings and international performances, he has introduced his distinctive sound to audiences beyond Brazil. His music reflects a strong connection to Brazilian culture while remaining open to new musical directions.",
@@ -719,6 +762,7 @@ window.ARTISTS = [
     "slug": "sara-chakarova",
     "name": "Sara Chakarova",
     "note": "",
+    "managed": true,
     "status": "current",
     "photo": "sara-chakarova.jpg",
     "bio": "Sara Chakarova is a Bulgarian percussionist whose artistic background combines classical training with contemporary performance and creative experimentation. She has performed internationally and developed a career shaped by technical musicianship and a strong stage presence. Her work explores the expressive possibilities of percussion through solo performances, collaborations and new musical projects. Alongside her performance career, she is developing her identity as a recording artist and composer. Her approach brings together instrumental virtuosity, creativity and a desire to reach audiences beyond traditional classical music.",
@@ -761,6 +805,7 @@ window.ARTISTS = [
     "slug": "sunset-rollercoaster",
     "name": "Sunset Rollercoaster",
     "note": "",
+    "collab": "Taiwanese Waves",
     "status": "current",
     "photo": "sunset-rollercoaster.jpg",
     "bio": "Sunset Rollercoaster is a Taiwanese band known for its dreamy blend of psychedelic pop, soft rock, funk and soul. Their music is characterised by smooth vocals, nostalgic synthesizers and atmospheric arrangements. Albums such as Cassa Nova and Soft Storm helped establish their international following. Their sound draws inspiration from vintage pop and R&B while maintaining a distinctive contemporary identity. Through extensive touring, they have become one of Taiwan's most internationally recognised independent bands.",
@@ -775,6 +820,7 @@ window.ARTISTS = [
     "slug": "tara",
     "name": "TÄRA",
     "note": "",
+    "collab": "Mindfeederz",
     "status": "current",
     "photo": "tara.jpg",
     "bio": "",
@@ -788,8 +834,9 @@ window.ARTISTS = [
   {
     "slug": "thundercat",
     "name": "Thundercat",
-    "note": "With The Alchemist Asia Group",
-    "noteLink": "https://alchemistasia.com",
+    "note": "",
+    "collab": "The Alchemist Asia Group",
+    "collabLink": "https://alchemistasia.com",
     "status": "current",
     "photo": "thundercat.jpg",
     "bio": "",
