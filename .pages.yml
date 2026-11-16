@@ -35,7 +35,6 @@ content:
     fields:
       - name: events
         label: Events
-        description: "The website sorts them by date by itself. Dates before today move to \"Past\" automatically, so there is no need to delete old ones."
         type: object
         list:
           collapsible:
@@ -46,6 +45,7 @@ content:
             label: Date
             type: date
             required: true
+            description: "The website sorts events by date and moves past dates to \"Past\" by itself, so old events don't need deleting."
             options:
               format: yyyy-MM-dd
           - name: artist
@@ -83,7 +83,6 @@ content:
     fields:
       - name: news
         label: News stories
-        description: "The News page shows them newest first by date."
         type: object
         list:
           collapsible:
@@ -94,6 +93,7 @@ content:
             label: Date
             type: date
             required: true
+            description: "The News page shows stories newest first."
             options:
               format: yyyy-MM-dd
           - name: title
@@ -220,7 +220,6 @@ content:
     fields:
       - name: artists
         label: Artists
-        description: "The website puts them in A–Z order by itself, so a new artist can be added at the end."
         type: object
         list:
           collapsible:
@@ -231,6 +230,7 @@ content:
             label: Name
             type: string
             required: true
+            description: "New artists can be added at the end: the website sorts them A–Z by itself."
           - name: status
             label: Current or past
             type: select
