@@ -378,7 +378,7 @@ window.ARTISTS = [
     "collab": "The Alchemist Asia Group",
     "collabLink": "https://alchemistasia.com",
     "status": "current",
-    "photo": "",
+    "photo": "gabriele-poso.jpg",
     "bio": "Gabriele Poso is an Italian percussionist, multi-instrumentalist, composer and producer whose music brings together Afro-Latin rhythms, jazz, soul and Mediterranean influences. Born in Sardinia and raised in Lecce, he developed his musical approach through studies in Italy, Puerto Rico and Cuba, building a distinctive sound rooted in rhythm and experimentation.\n\nOver the years, he has collaborated with artists including Osunlade and Louie Vega and released music through labels such as Yoruba Records, BBE and Wonderwheel Recordings. His projects include Tamburo Infinito, Ritmo Italiano and his 2026 album Maraviglia, which combines Afro-Caribbean percussion, jazz and Mediterranean grooves. Known for his energetic live performances, Poso continues to connect musical traditions with contemporary sounds.",
     "links": {
       "spotify": "https://open.spotify.com/artist/2yApCA4GzuGb9oDS5I5Fjp",
@@ -493,7 +493,7 @@ window.ARTISTS = [
     "collab": "The Alchemist Asia Group",
     "collabLink": "https://alchemistasia.com",
     "status": "current",
-    "photo": "",
+    "photo": "kassa-overall.jpg",
     "bio": "A Seattle native, Kassa Overall is a Grammy-nominated jazz artist, drummer, emcee, singer and producer. He seamlessly blends jazz, hip-hop and avant-garde experimentation into a sound uniquely his own. His music is both innovative and accessible, pushing the boundaries of genre while remaining deeply engaging.\n\nKassa Overall has released six critically acclaimed mixtapes and albums, including I Think I’m Good and Go Get Ice Cream and Listen to Jazz. His project ANIMALS explores the complexities of his identity as an artist and a Black man in America, featuring collaborations with an eclectic mix of musicians, from Danny Brown and Lil B to Nick Hakim and Vijay Iyer.",
     "links": {
       "spotify": "https://open.spotify.com/artist/7qzzcFzliEAHMlDA9qaRVf",
